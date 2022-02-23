@@ -1,13 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pushmensage/firebase_options.dart';
 import 'package:pushmensage/screens/home.dart';
 import 'package:pushmensage/screens/mensage_in.dart';
+import 'package:pushmensage/static/messaging.dart';
 import 'package:pushmensage/static/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //final messing = FirebaseMessaging.instance;
+  //print('token ${await messing.getToken()}');
+
+  Messaging.initApp();
   runApp(const MyApp());
 }
 
