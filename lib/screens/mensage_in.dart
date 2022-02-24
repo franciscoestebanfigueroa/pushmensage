@@ -6,6 +6,7 @@ class MensageIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)?.settings.arguments ?? 'sin arg';
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -15,7 +16,7 @@ class MensageIn extends StatelessWidget {
           height: 200,
           color: Colors.red,
           child: Text(
-            router,
+            arg.toString(),
             style: const TextStyle(fontSize: 25),
           ),
         ),

@@ -1,8 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pushmensage/firebase_options.dart';
-import 'package:pushmensage/screens/home.dart';
 import 'package:pushmensage/screens/mensage_in.dart';
 import 'package:pushmensage/static/messaging.dart';
 import 'package:pushmensage/static/router.dart';
@@ -14,22 +12,49 @@ void main() async {
   //print('token ${await messing.getToken()}');
 
   Messaging.initApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  String data = '';
+  MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessangeKey =
+      GlobalKey<ScaffoldMessengerState>();
+  @override
+  void initState() {
+    Messaging.getStreamMensage.listen((event) {
+      print('en _myApp $event');
+      setState(() {
+        widget.data = event;
+      });
+      scaffoldMessangeKey.currentState
+          ?.showSnackBar(SnackBar(content: Text(event)));
+      navigatorKey.currentState?.pushNamed(MensageIn.router, arguments: event);
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessangeKey,
       title: 'Flutter Mensajes push',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: MensageIn.router,
+      //initialRoute: MensageIn.router,
       routes: MyRouter.router,
-      home: const Text('Flutter Demo Home Page'),
+      home: Scaffold(
+          body: Center(child: Text(' datos de stream ${widget.data}'))),
     );
   }
 }
